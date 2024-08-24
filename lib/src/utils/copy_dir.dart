@@ -10,8 +10,9 @@ void copyDirectorySync(String src, String des) {
     destination.createSync(recursive: true);
   }
   // check source exist
-  if (!destination.existsSync()) {
-    destination.createSync(recursive: true);
+  if (!source.existsSync()) {
+    //  print("source dont exist");
+     return;
   }
   source.listSync(recursive: false).forEach((entity) {
     final newPath =

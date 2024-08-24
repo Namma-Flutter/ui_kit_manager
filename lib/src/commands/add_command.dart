@@ -9,11 +9,11 @@ Future<void> add(String folder) async {
   await checkUpdate();
   // check folder exist
   if (Directory("$clonePath/lib/pages/$folder").existsSync()) {
-    print("path exist");
-    copyDirectorySync(clonePath,"${Directory.current.path}/lib/pages");
+
+    copyDirectorySync("$clonePath/lib/pages","${Directory.current.path}");
     // do clone
   } else {
-    print("no path exist");
+    print("No UI found please check again");
     // show error msg
   }
 }
