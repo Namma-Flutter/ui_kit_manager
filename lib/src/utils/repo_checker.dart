@@ -1,23 +1,29 @@
 import 'package:process_run/cmd_run.dart';
 import 'dart:io';
 import 'package:nuk/global.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> checkUpdate() async {
-  // final prefs = await SharedPreferences.getInstance();
+Future<void> checkUpdate({bool force = false}) async {
   if (Directory(clonePath).existsSync()) {
-    // final lastUpdate =
-        // prefs.getInt('lastUpdate') ?? DateTime.now().millisecondsSinceEpoch;
+    int lastUpdate = DateTime.now().millisecondsSinceEpoch;
+    try {
+      lastUpdate = int.parse(await File('$clonePath/.lastSync').readAsString());
+    } catch (e) {
+      print(e);
+    }
+    lastUpdate+=86400000 ;  // plus one day
+
     // If the repo already exists, pull the latest changes
 
-    // if (DateTime.now()
-    //     .isBefore(DateTime.fromMillisecondsSinceEpoch(lastUpdate))) {
+    if (DateTime.now().millisecondsSinceEpoch>lastUpdate) {
+             print("here");
       await pullRepo(clonePath);
-      // prefs.setInt('lastUpdate', DateTime.now().millisecondsSinceEpoch);
-    // }
+      (await File('$clonePath/.lastSync').create())
+          .writeAsString(DateTime.now().millisecondsSinceEpoch.toString());
+    }
+ 
   } else {
     // If the repo doesn't exist, clone it
-  
+
     await cloneRepo(repoUrl, clonePath);
   }
 }
@@ -35,7 +41,6 @@ Future<void> cloneRepo(String repoUrl, String clonePath) async {
 
 Future<void> pullRepo(String repoPath) async {
   final result = await runExecutableArguments('git', ['-C', repoPath, 'pull']);
-  print(result.stdout);
   if (result.exitCode == 0) {
     // print('Repository updated successfully.');
   } else {
