@@ -1,5 +1,5 @@
 
-import 'package:nuk/src/utils/repo_checker.dart';
+import 'package:nui/src/utils/repo_checker.dart';
 
 void checkForUpdate(){
   checkUpdate();

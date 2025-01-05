@@ -1,6 +1,6 @@
 import 'package:process_run/cmd_run.dart';
 import 'dart:io';
-import 'package:nuk/global.dart';
+import 'package:nui/global.dart';
 
 Future<void> checkUpdate({bool force = false}) async {
   if (Directory(clonePath).existsSync()) {

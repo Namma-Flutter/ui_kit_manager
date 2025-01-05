@@ -1,13 +1,12 @@
 import 'dart:io';
 
-import 'package:nuk/global.dart';
-import 'package:nuk/src/utils/copy_dir.dart';
-import 'package:nuk/src/utils/is_flutter_project.dart';
-import 'package:nuk/src/utils/repo_checker.dart';
+import 'package:nui/global.dart';
+import 'package:nui/src/utils/copy_dir.dart';
+import 'package:nui/src/utils/is_flutter_project.dart';
 
 Future<void> add(String folder) async {
   // check repo exist
-  await checkUpdate();
+  // await checkUpdate(); // no longer needed alternatively using git as repo
   // check folder exist
   if (Directory("$clonePath/lib/pages/$folder").existsSync()) {
     if (isFlutterProject(Directory.current.path)) {

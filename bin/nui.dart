@@ -1,9 +1,9 @@
-import 'package:nuk/nuk.dart' as nuk;
+import 'package:nui/nui.dart' as nui;
 
 Future<void> main(List<String> arguments) async {
   switch (arguments[0].toLowerCase()) {
     case "add":
-      nuk.add(arguments[1]);
+      nui.add(arguments[1]);
       break;
     case "version":
       // todo: check version of repo and pkg

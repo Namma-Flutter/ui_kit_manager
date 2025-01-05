@@ -20,19 +20,19 @@ The following commands can be used in terminal to help you efficiently manage UI
 The add command used to add an component or page a flutter project.
 
 ```bash
-nuk add <page or component id>
+nui add <page or component id>
 ```
 Example :
 The following example add the page or component in 'lib\namma_ui_kit\login_page' folder by default. 
 
 ```bash
-nuk add login_page
+nui add login_page
 ```
 
 you can overrite the destinantion path using the following command
 
 ```bash
-nuk add login_page --path my_pages/my_login
+nui add login_page --path my_pages/my_login
 ```
 
 
