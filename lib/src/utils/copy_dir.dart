@@ -1,10 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
-
+import 'package:nui/global.dart';
+import 'package:dio/dio.dart';
+import 'package:nui/models/index.dart';
 import 'package:path/path.dart' as path;
 
 void copyDirectorySync(String src, String des) {
-  Directory source=Directory(src);
-   Directory   destination=Directory(des);
+  Directory source = Directory(src);
+  Directory destination = Directory(des);
   // create folder if not exist
   if (!destination.existsSync()) {
     destination.createSync(recursive: true);
@@ -12,7 +15,7 @@ void copyDirectorySync(String src, String des) {
   // check source exist
   if (!source.existsSync()) {
     //  print("source dont exist");
-     return;
+    return;
   }
   source.listSync(recursive: false).forEach((entity) {
     final newPath =
@@ -25,26 +28,40 @@ void copyDirectorySync(String src, String des) {
   });
 }
 
-
-void copyGitDirectorySync(String src, String des) {
-  Directory source=Directory(src);
-   Directory   destination=Directory(des);
+Future<void> copyGitDirectorySync(String index, String des) async {
+  Directory destination = Directory(des);
   // create folder if not exist
+
   if (!destination.existsSync()) {
     destination.createSync(recursive: true);
   }
-  // check source exist
-  if (!source.existsSync()) {
-    //  print("source dont exist");
-     return;
+
+  var resposne = await Dio().get(index,
+      options: Options(
+           validateStatus: (_) => true));
+  if (resposne.statusCode == 404) {
+    print('No template exist');
+    return;
+  } else if (resposne.statusCode != 200) {
+    print('Something went wrong : ${resposne.data}');
+    return;
+  } else {
+    final indexData = Index.fromJson(json.decode((resposne.data)));
+    print('${indexData.totalSize} bytes of disk space will be used');
+    writeFiles(indexData.contents!, destination);
   }
-  source.listSync(recursive: false).forEach((entity) {
-    final newPath =
-        destination.path + Platform.pathSeparator + path.basename(entity.path);
-    if (entity is File) {
-      entity.copySync(newPath);
-    } else if (entity is Directory) {
-      copyDirectorySync(entity.path, newPath);
+}
+
+writeFiles(List<Content> contents, Directory destination) async {
+  for (var content in contents) {
+    if (content.type == 'file') {
+      (await Dio().download('$contentUrl/${content.path}', content.path,
+              options: Options(responseType: ResponseType.bytes)))
+          .data;
+    } else {
+      if (content.children!.isNotEmpty) {
+        writeFiles(content.children!, destination);
+      }
     }
-  });
+  }
 }

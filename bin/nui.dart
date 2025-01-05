@@ -1,4 +1,4 @@
-import 'package:nui/nui.dart' as nui;
+import 'package:nui/main.dart' as nui;
 
 Future<void> main(List<String> arguments) async {
   switch (arguments[0].toLowerCase()) {
